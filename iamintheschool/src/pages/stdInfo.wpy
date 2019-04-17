@@ -1,0 +1,185 @@
+<style lang="less">
+	page{
+		background: #eee;
+	}
+	.info view{
+		display: flex;
+		justify-content: space-between;
+		height: 30px;
+		line-height: 30px;
+		border-bottom: 1px solid #ccc;
+		background: #fff;
+
+		input{
+			text-align: right;
+		}
+	}
+	.left{
+		font-size: 14px;
+		color: #333;
+	}
+	.right{
+		font-size: 16px;
+		color: #111;
+	}
+	.info .img{
+		height: 60px;
+		image{
+			width: 60px;
+			height: 60px;
+		}
+		.left{
+			line-height: 60px;
+		}
+	}
+
+	.info .save{
+		display: block;
+		margin-top: 20px;
+		background: green;
+		font-size: 18px;
+		color: #fff;
+		border-radius: 4px;
+		text-align: center;
+	}
+	
+</style>
+<template>
+    <view class="info">
+    	<view class="img">
+    		<view class="left">头像</view>
+    		<image class="right" src="{{userInfo.avatarUrl}}"></image>
+    	</view>
+
+    	<form bindsubmit="formsubmit">
+	    	<view class="name">
+	    		<view class="left">姓名</view>
+	    		<input class="right" type="text" value="{{studentInfo.name}}" name="name"/>
+	    	</view>
+	    	<view class="sex">
+	    		<view class="left">性别</view>
+				<picker class="right" name="sex" bindchange="sexChange" value="{{studentInfo.sexIndex}}" range="{{sex}}">
+				    <view>
+				      {{sex[sexIndex]}}
+				    </view>
+				 </picker>
+	    	</view>
+	    	<view class="nation">
+	    		<view class="left">民族</view>
+	    		<picker class="right" name="nation" bindchange="nationChange" value="{{studentInfo.nationIndex}}" range="{{nation}}">
+	    			<view>{{nation[nationIndex]}}</view>
+	    		</picker>
+	    	</view>
+
+	    	<view class="class">
+	    		<view class="left">班级</view>
+	    		<picker class="right" name="classId" bindchange="classChange" value="{{studentInfo.classId || 0}}" range="{{classList}}">
+	    			<view>{{classList[classId]}}</view>
+	    		</picker>
+	    	</view>
+
+	    	<view class="stdId">
+	    		<view class="left">学号</view>
+	    		<input class="right" type="number" value="{{studentInfo.id}}" name="id" placeholder="请输入学号"/>
+	    	</view>
+	    	<view class="phone">
+	    		<view class="left">手机号</view>
+	    		<input class="right" type="number" value="{{studentInfo.phone}}" name="phone" placeholder="请输入手机号" />
+	    	</view>
+	    	<view class="email">
+	    		<view class="left">邮箱</view>
+	    		<input class="right" type="text" value="{{studentInfo.email}}" name="email" placeholder="请输入邮箱" />
+	    	</view>
+	    	<view class="homeId">
+	    		<view class="left">宿舍号</view>
+	    		<input class="right" type="text" value="{{studentInfo.homeId}}" name="homeId" placeholder="请输入宿舍号" />
+	    	</view>
+	    	<view class="parentPhone">
+	    		<view class="left">家长电话</view>
+	    		<input class="right" type="number" value="{{studentInfo.parentPhone}}" name="parentPhone" placeholder="请输入家长电话" />
+	    	</view>
+	    	<button class="save" form-type="submit">保存</button>
+    	</form>
+
+    </view>
+</template>
+<script>
+	import wepy from 'wepy'
+	export default class StdIndo extends wepy.page{
+		config = {
+	      navigationBarTitleText: '学生信息',
+	      navigationBarBackgroundColor: '#1AAD16',
+	    }
+	    data={
+	    	userInfo: undefined,
+	    	studentInfo: undefined,
+	    	sexIndex: 0,
+	    	sex: ['男','女'],
+	    	nationIndex: 0,
+	    	nation: ['汉族','回族', '满族', '白族'],
+	    	classId: 0,
+	    	classList: undefined,
+	    	className: undefined
+	    }
+	    methods = {
+	    	formsubmit(e){
+	    		const that = this;
+	    		this.studentInfo = e.detail.value;
+	    		this.$parent.globalData.studentInfo = this.studentInfo;
+	    		this.$parent.globalData.studentInfo.sex = this.sex[this.sexIndex];
+	    		this.$parent.globalData.studentInfo.nation = this.nation[this.nationIndex];
+	    		this.$parent.globalData.studentInfo.openId = this.$parent.globalData.openId;
+
+	    		wx.request({
+				  url: 'http://localhost:3000/postStdInfo', 
+				  data: that.$parent.globalData.studentInfo,
+				  header: {
+				    'content-type': 'application/json' // 默认值
+				  },
+				  success(res) {
+				    console.log(res.data)
+				    // 要用tab跳转
+				    wx.switchTab({
+				    	url: './mine'
+				    });
+				  }
+				})
+
+	    	},
+	    	sexChange(e) {
+			    this.sexIndex = e.detail.value;
+			},
+			nationChange(e){
+				this.nationIndex = e.detail.value;
+			},
+			classChange(e){
+				this.classId = e.detail.value;
+				this.className = this.classList[e.detail.value];
+			}
+	    }
+
+	    onLoad(){
+	    	let that = this;
+	    	wx.request({
+	    		url: 'http://localhost:3000/getClassList',
+	    		success(res){
+	    			that.classList = res.data.map( value => value.className );
+	    			that.className = that.classList[0];     // 初始化选择 index:0
+	    		}
+	    	});
+	    	this.userInfo = this.$parent.globalData.userInfo;
+	    	this.studentInfo = this.$parent.globalData.studentInfo;
+	    	this.sexIndex = this.studentInfo ? this.sex.indexOf(this.studentInfo.sex) : 0;
+	    	this.nationIndex = this.studentInfo ? this.nation.indexOf(this.studentInfo.nation) : 0;
+
+	    	
+	    	console.log(this.userInfo)
+	    	console.log(this.studentInfo)
+	    	console.log(this.$parent.globalData)
+	    }
+
+	    onShow(){
+	    	console.log('onshow')
+	    }
+	}
+</script>

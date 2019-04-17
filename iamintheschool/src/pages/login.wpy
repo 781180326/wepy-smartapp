@@ -1,0 +1,24 @@
+<style lang="less">
+
+</style>
+
+<template>
+    <button open-type="getUserInfo" bindgetuserinfo="bindGetUserInfo">
+    授权登录
+  </button>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class Login extends wepy.page {
+   
+    bindGetUserInfo(e){
+        
+        wx.switchTab({
+            url: './index'
+        });
+
+    }
+}
+</script>
+

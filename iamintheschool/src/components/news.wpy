@@ -1,0 +1,34 @@
+<style lang="less">
+	
+</style>
+<template lang="wxml">
+	<view>
+		<view>title: {{title}}</view>
+		<view>num: {{num}}</view>
+		<slot name="sss"></slot>
+	</view>
+</template>
+
+<script>
+	import wepy from 'wepy'
+	export default class News extends wepy.component{
+		props = {
+			title: String,
+			num: {
+				type: Number,
+				twoWay: true,
+				defualt: 0
+			}
+		}
+		
+		onLoad(){
+			let that = this;
+			console.log(this.num);
+			setInterval( ()=>{
+				that.num++;
+				that.$apply();
+			} ,1000);
+		}
+		
+	}
+</script>

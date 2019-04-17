@@ -1,0 +1,73 @@
+<style lang="less" >
+  page{
+    background: #eee;
+  }
+</style>
+
+<script>
+import wepy from 'wepy'
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index',    //首页
+      'pages/addrList', //通讯录
+      'pages/message',  //消息
+      'pages/mine',     //我
+      'pages/signIn',   //签到
+      'pages/notice',   //通知
+      'pages/questionnaire',//问卷
+      'pages/leave',    //请假
+      'pages/courseAttendance',//课程签到
+      'pages/courseNotice', //课程通知
+      'pages/myCourse', //我的课程
+      'pages/timeTable',//课表
+      'pages/class',    //
+      'pages/about',    //关于
+      'pages/login',    //登录
+      'pages/stdInfo'   //本人信息
+    ],
+    window: {
+      backgroundTextStyle: 'light',
+      navigationBarBackgroundColor: '#fff',
+      navigationBarTitleText: 'WeChat',
+      navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      color: '#ccc',
+      selectedColor: '#1AAD16',
+      list: [
+        {
+          pagePath: 'pages/index',
+          text: '首页',
+          iconPath: './static/images/homepage.png',
+          selectedIconPath: './static/images/homepage_fill.png'
+        },
+        {
+          pagePath: 'pages/addrList',
+          text: '通讯录',
+          iconPath: './static/images/addresslist.png',
+          selectedIconPath: './static/images/addresslist_fill.png'
+        },
+        {
+          pagePath: 'pages/message',
+          text: '消息',
+          iconPath: './static/images/message.png',
+          selectedIconPath: './static/images/message_fill.png'
+        },
+        {
+          pagePath: 'pages/mine',
+          text: '我',
+          iconPath: './static/images/mine.png',
+          selectedIconPath: './static/images/mine_fill.png'
+        }
+      ]
+    },
+    debug: true
+  }
+
+  globalData = {
+    openId:1
+  }
+
+}
+</script>

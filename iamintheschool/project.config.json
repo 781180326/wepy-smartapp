@@ -1,0 +1,17 @@
+{
+	"description": "A WePY project",
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"postcss": false,
+		"minified": false,
+		"newFeature": true,
+		"nodeModules": true,
+		"autoAudits": false
+	},
+	"compileType": "miniprogram",
+	"appid": "wxc38c24325881ceb2",
+	"projectname": "iamintheschool",
+	"miniprogramRoot": "dist/",
+	"condition": {}
+}

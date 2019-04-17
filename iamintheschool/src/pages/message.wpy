@@ -1,0 +1,58 @@
+<style lang="less">
+
+</style>
+<template>
+    <view>{{mes}}{{aaa}}</view>
+    <!--无冒号传参时，传递的是静态值 -->
+
+    <!-- :name传参时，传递的是data中的变量，不用使用{{}} -->
+    <!-- :name.sync传参时，将父组件数据动态绑定到子组件 -->
+    <!-- 在子组件中设置参数 props = { name:{ type:String, twoWay: true } }时，将子组件的数据动态绑定到父组件 -->
+    <!-- .sync和twoWay结合可实现数据的双向绑定 -->
+    <new title="bbb" num="aaa">
+    	<view slot="sss">this is slot</view>
+    </new>
+    <new :title="bbb" :num="aaa">
+    	<view slot="sss">this is slot</view>
+    </new>
+    <new :title.sync="bbb" :num.sync="aaa">
+    	<view slot="sss">this is slot</view>
+    </new>
+</template>
+<script>
+import wepy from 'wepy'
+import News from '../components/news'
+export default class Message extends wepy.page{
+	components = {
+		new: News
+	}
+    computed = {
+    	mes(){
+    		//console.log('aaaaaaa');
+    		//console.log(this.aaa)
+    		return this.aaa;
+    	}
+    }
+    data = {
+    	aaa:2,
+    	bbb: 'aaaaa'
+    }
+
+    watch = {
+    	aaa(){
+    		//console.log('hhh');
+    		return 4;
+    	}
+    }
+
+    onShow(){
+    	this.aaa = 55;
+    	let that = this;
+    	console.log(this)
+    	setInterval( ()=>{
+			that.aaa++;
+			that.$apply();
+    	},1000 );
+    }
+}
+</script>

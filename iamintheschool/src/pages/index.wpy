@@ -1,0 +1,289 @@
+<style lang="less">
+  Page{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 16px;
+    background-color: #ccc;
+  }
+  image{
+    display: block;
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  .swiper_img{
+    width: 750rpx;
+    height: 150px;
+  }
+  .logo{
+    display: flex;
+    height: 50rpx;
+    padding-left: 20rpx;
+    border-bottom: 1px solid #ccc;
+    background: #fff;
+    image{
+      width: 50rpx;
+      height: 50rpx;
+      border-radius: 50%;
+      border: 1px solid blue;
+    }
+    text{
+      height: 50rpx;
+      line-height: 50rpx;
+      flex: 1;
+    }
+  }
+
+  .btn{
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    background: #fff;
+    .btn-view{
+      float: left;
+      width: 80rpx;
+      height: 100rpx;
+      margin: 20rpx 50rpx;
+      image{
+        width: 80rpx;
+        height: 80rpx;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+      }
+      text{
+        display: block;
+        height: 20rpx;
+        line-height: 20rpx;
+        font-size: 20rpx;
+        text-align: center;
+      }
+    }
+  }
+  .today-timetable{
+    background: #fff;
+    .lable{
+      display: flex;
+      width: 100%;
+      margin-top: 20rpx;
+      padding: 20rpx;
+      border-bottom: 1px solid #ccc;
+      image{
+        margin: 5rpx;
+        width: 35rpx;
+        height: 35rpx;
+      }
+      text{
+        flex: 1;
+        font-size: 14px;
+        height: 40rpx;
+        line-height: 40rpx;
+      }
+    }
+    .timetable{
+      height: 60px;
+      line-height: 60px;
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+    }
+    .view-timetable{
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+    }
+  }
+  
+  
+</style>
+<template>
+  <view>
+    <swiper 
+      indicator-dots='true'
+      indicator-color='rgba(.3,.3,.3,.3)' 
+      indicator-active-color='#fff' 
+      autoplay='true'
+      interval='3000'
+      duration='500'
+      circular='true'>
+      <swiper-item wx:for="{{swiperUrls}}" wx:key="*this">
+        <image src="{{item}}" class="swiper_img"></image>
+      </swiper-item>
+    </swiper>
+
+    <view class="main">
+      <view class="logo">
+        <image src="../static/images/homepage.png"></image>
+        <text>西安科技大学</text>
+      </view>
+
+      <view class="btn">
+        <view class="btn-view" wx:for="{{btnLis}}" wx:key="name" wx:for-item="item" bindtap="{{item.name}}">
+          <image src="{{item.url}}"></image>
+          <text>{{item.text}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="today-timetable">
+      <view class="lable">
+        <image src="../static/images/我的课程.png"></image>
+        <text>今日课表</text>
+      </view>
+      <view class="timetable">
+        今天没课哦~
+      </view>
+      <view class="view-timetable" bindtap="timetable">查看课表</view>
+    </view>
+
+    <view>{{time}}</view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '我在校园',
+      navigationBarBackgroundColor: '#1AAD16',
+    }
+
+    data = {
+      time: (new Date()).toString(),
+      swiperUrls: [
+        '../static/images/swiper_0.jpg',
+        '../static/images/swiper_1.jpg',
+        '../static/images/swiper_2.jpg'
+      ],
+      btnLis: [
+        { name:'signin',    text:'签到', url:'../static/images/签到.png' },
+        { name:'notice',   text:'通知', url:'../static/images/通知.png' },
+        { name:'question',  text:'问卷', url:'../static/images/问卷.png' },
+        { name:'leave',     text:'请假', url:'../static/images/请假.png' },
+        { name:'courseatten', text:'课程签到', url:'../static/images/课程签到.png' },
+        { name:'coursenotice', text:'课程通知', url:'../static/images/课程通知.png' },
+        { name:'mycourse',  text:'我的课程', url:'../static/images/我的课程.png' }
+      ]
+    }
+
+    methods = {
+      signin(e) {
+        wx.navigateTo({
+          url: './signIn'
+        });
+      },
+      notice(e) {
+        wx.navigateTo({
+          url: './notice'
+        });
+      },
+      question(e) {
+        wx.navigateTo({
+          url: './questionnaire'
+        });
+      },
+      leave(e) {
+        wx.navigateTo({
+          url: './leave'
+        });
+      },
+      courseatten(e) {
+        wx.navigateTo({
+          url: './courseAttendance'
+        });
+      },
+      coursenotice(e) {
+        wx.navigateTo({
+          url: './courseNotice'
+        });
+      },
+      mycourse(e) {
+        wx.navigateTo({
+          url: './myCourse'
+        });
+      },
+      timetable(e) {
+        wx.navigateTo({
+          url: './timeTable'
+        });
+      }
+    }
+
+    getPromise( fun, url ){
+      return new Promise( (resolve, reject) =>{
+        fun( {
+          url: url,
+          success(res){
+            resolve(res);
+          },
+          fail(res){
+            reject(res);
+          }
+        })
+      });
+    }
+    
+    onLoad(){
+      const that = this;
+      let getset = that.getPromise(wx.getSetting);
+      getset.then( 
+        (res)=>{
+          if (res.authSetting['scope.userInfo']) {
+            that.getPromise(wx.getUserInfo).then(
+              (res)=>{
+                that.$parent.globalData.userInfo = res.userInfo;
+                const openId = that.$parent.globalData.openId;
+
+                // 上传openid到node后台，获取相应数据，不需要在这里引入js数据文件了
+                wx.request({
+                  url: 'http://localhost:3000/getStdInfo', 
+                  data: {openId:  that.$parent.globalData.openId},
+                  header: {
+                    'content-type': 'application/json' // 默认值
+                  },
+                  success(res) {
+                    let result = res.data;
+                    that.$parent.globalData.className = result.className;
+                    that.$parent.globalData.college = result.college;
+                    that.$parent.globalData.studentInfo = result.stdInfo;
+
+                    if(!that.$parent.globalData.studentInfo){
+                      that.getPromise(wx.navigateTo, './stdInfo').then(
+                        res=>{
+                          console.log('跳转成功')
+                        },
+                        err=>{
+                          console.log(err)
+                        }
+                      );
+                    }
+                  },
+                  fail(){
+                    console.log('请求失败')
+                  }
+                })
+              }
+            )
+          }else{
+            that.getPromise(wx.navigateTo, './login').then(
+              res=>{
+                console.log('跳转成功')
+              },
+              err=>{
+                console.log(err)
+              }
+            );
+          }
+        }, 
+        (err)=>{
+          console.log(err)
+      } );
+    }
+
+    onShow(){
+      let that = this;
+      setInterval( ()=>{
+        that.time = (new Date()).toString();
+        that.$apply();
+      },1000 );
+    }
+  }
+</script>

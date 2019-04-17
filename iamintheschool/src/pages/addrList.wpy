@@ -1,0 +1,82 @@
+<style lang="less">
+    page{
+        background: #eee;
+    }
+    .box{
+        display: flex;
+        justify-content: flex-start;
+        padding: 5px;
+        margin-top: 10px;
+        background: #FFF;
+        .img image{
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .info .name{
+           height: 20px;
+           line-height: 20px;
+           color: #000;
+        }
+
+        .info .id{
+            height: 20px;
+            line-height: 20px;
+            font-size: 16px;
+            color: #ccc;
+        }
+    }
+</style>
+<template>
+    <view class="box" wx:for="{{studentList}}" wx:key="*this" data-phone="{{studentList[index].phone}}" bindtap="call">
+        <view class="img">
+            <image></image>
+        </view>
+        <view class="info">
+        	<view class="name">{{item.name}}</view>
+        	<view class="id">{{item.id}}</view>
+        </view>
+    </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class AddrList extends wepy.page {
+    config = {
+	    navigationBarTitleText: '学生信息',
+	    navigationBarBackgroundColor: '#1AAD16',
+    }
+    data = {
+    	studentList: []
+    }
+
+    methods = {
+        call(e){
+            const phone = e.currentTarget.dataset.phone;
+            console.log(phone)
+            wx.makePhoneCall({
+                phoneNumber: phone
+            });
+        }
+    }
+
+    onLoad(){
+    	// onLoad 只有在当前页面人页面栈时才运行一次，页面栈中的数据会保存
+    	let that = this;
+    	wx.request({
+    		url: 'http://localhost:3000/getClassStudents',
+    		data: {
+    			openId: that.$parent.globalData.openId
+    		},
+    		success(res){
+    			that.studentList=res.data;
+    			that.$apply();			// ********异步更新数据必须触发$apply
+    		}
+    	});
+    }
+
+
+    onShow(){
+
+    }
+}
+</script>
